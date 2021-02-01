@@ -5,9 +5,9 @@ Original post: http://forum.attractmode.org/index.php?topic=3891.0
 
 This is a basic layout styled after NeoGeo look and feel. 
 
-![Wide Sample](https://raw.githubusercontent.com/mahuti/Gameboy/master/neo-boarwalk-wide.png)
+![Wide Sample](https://raw.githubusercontent.com/mahuti/Boardwalk-Neo/master/neo-boardwalk-wide.png)
 
-![Tall Sample](https://raw.githubusercontent.com/mahuti/Gameboy/master/neo-boarwalk-tall.png)
+![Tall Sample](https://raw.githubusercontent.com/mahuti/Boardwalk-Neo/master/neo-boardwalk-tall.png)
 
 ### Requires: 
 - File module
