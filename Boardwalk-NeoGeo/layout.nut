@@ -65,7 +65,6 @@ class UserConfig {
 local config = fe.get_config();
 
 // modules
-fe.load_module("fade");
 fe.load_module("file"); 
 fe.load_module("preserve-art"); 
 fe.do_nut(fe.script_dir + "modules/pos.nut" );
