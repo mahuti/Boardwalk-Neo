@@ -114,11 +114,11 @@ function random_file(path) {
 //					ARCADE BACKGROUNDS 
 ///////////////////////////////////////////////////////
 
-local bg = PreserveImage( random_file("backgrounds"), 0, 0, pos.width(fe.layout.width), pos.height(fe.layout.height) );
+local bg = PreserveImage( random_file("backgrounds"), 0, 0, pos.width(1440), pos.height(1080) );
 bg.set_fit_or_fill( "fill" );
 bg.set_anchor( ::Anchor.Top );
  
-local black_overlay = fe.add_text("",0,0,pos.width(fe.layout.width),pos.height(fe.layout.height))
+local black_overlay = fe.add_text("",0,0,pos.width(1440),pos.height(1080))
 black_overlay.set_bg_rgb(1,1,1)
 black_overlay.bg_alpha = 200
 

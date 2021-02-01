@@ -15,7 +15,7 @@ This is a basic layout styled after NeoGeo look and feel.
 
 ### Uses: 
 - snap: video snaps ideally
-- instructions: 2d insstruction files  
+- instructions: 2d instruction files  
 - wheel: wheel logos 
 - marquee: neogeo marquees 
 
