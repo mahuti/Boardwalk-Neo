@@ -52,12 +52,6 @@ class UserConfig {
 		order=order++ /> 
 		instruction_cards="instructions";
 
-    </ label="Scaling", 
-		help="Controls how the layout should be scaled. Stretch will fill the entire space. Scale will scale up/down to fit the space with potential cropping of non-critical elements (eg. backgrounds).", 
-		options="stretch,scale,no scale", 
-		order=order++ /> 
-		scale="stretch";
-		
 		
 }
  
@@ -70,15 +64,26 @@ fe.load_module("preserve-art");
 fe.do_nut(fe.script_dir + "modules/pos.nut" );
 
 // stretched positioning
+local stretchData =  {
+    base_width = 1440.0,
+    base_height = 1080.0,
+    layout_width = fe.layout.width,
+    layout_height = fe.layout.height,
+    scale= "stretch",
+    debug = true,
+}
+local stretch = Pos(stretchData)
+    
+// stretched positioning
 local posData =  {
     base_width = 1440.0,
     base_height = 1080.0,
     layout_width = fe.layout.width,
     layout_height = fe.layout.height,
-    scale= config["scale"],
+    scale= "scale",
     debug = true,
 }
-local pos = Pos(posData)
+local scale  = Pos(posData)
 
 function random(minNum, maxNum) {
     return floor(((rand() % 1000 ) / 1000.0) * (maxNum - (minNum - 1)) + minNum);
@@ -114,11 +119,11 @@ function random_file(path) {
 //					ARCADE BACKGROUNDS 
 ///////////////////////////////////////////////////////
 
-local bg = PreserveImage( random_file("backgrounds"), 0, 0, pos.width(1440), pos.height(1080) );
+local bg = PreserveImage( random_file("backgrounds"), 0, 0, stretch.width(1440), stretch.height(1080) );
 bg.set_fit_or_fill( "fill" );
 bg.set_anchor( ::Anchor.Top );
  
-local black_overlay = fe.add_text("",0,0,pos.width(1440),pos.height(1080))
+local black_overlay = fe.add_text("",0,0,stretch.width(1440),stretch.height(1080))
 black_overlay.set_bg_rgb(1,1,1)
 black_overlay.bg_alpha = 200
 
@@ -132,8 +137,8 @@ local snap_underlay = fe.add_text("",0,0,1,1)
 snap_underlay.set_bg_rgb(1,1,1)
 snap_underlay.bg_alpha = 255
     
-local snap = fe.add_surface(pos.width(459), pos.height(379));
-local snap_video = snap.add_artwork("snap", 0, 0, pos.width(459), pos.height(379)) 
+local snap = fe.add_surface(scale.width(459), scale.height(379));
+local snap_video = snap.add_artwork("snap", 0, 0, scale.width(459), scale.height(379)) 
 snap_video.trigger = Transition.EndNavigation;
 snap_video.preserve_aspect_ratio = false;
 
@@ -206,7 +211,7 @@ if (config["enable_crt_scanline"] != "No")
 {
     local scan_art;
 
-    scanlines_srf = fe.add_surface( pos.width(fe.layout.width), pos.height(fe.layout.height) )
+    scanlines_srf = fe.add_surface( scale.width(fe.layout.width), scale.height(fe.layout.height) )
     scanlines_srf.set_pos( 0,0 );
         
     if( ScreenWidth < 1920 )
@@ -274,27 +279,27 @@ else
 	}
 }
     
-local arcade_cabinet = fe.add_image( cabinet, pos.x(0),pos.y(0), pos.width(977), pos.height(1080));
-arcade_cabinet.x=pos.x(100,"right",arcade_cabinet,null,"center")
+local arcade_cabinet = fe.add_image( cabinet, scale.x(0),scale.y(0), scale.width(977), scale.height(1080));
+arcade_cabinet.x=scale.x(100,"right",arcade_cabinet,null,"center")
 arcade_cabinet.smooth = true
   
 // marquee
-local marquee_underlay = fe.add_image("marquee.jpg",0,0,pos.width(714), pos.height(262))
+local marquee_underlay = fe.add_image("marquee.jpg",0,0,scale.width(714), scale.height(262))
 
 
 ///////////////////////////////////////////////////////
 //					MARQUEE
 ///////////////////////////////////////////////////////
 
-local marquee = fe.add_surface(pos.width(715),pos.height(262))
-local marquee_img = marquee.add_artwork("marquee", 0,0, pos.width(715), pos.height(262) )
+local marquee = fe.add_surface(scale.width(715),scale.height(262))
+local marquee_img = marquee.add_artwork("marquee", 0,0, scale.width(715), scale.height(262) )
 marquee_img.trigger = Transition.EndNavigation;
 
 // light from the marquee
 local marquee_shadow = null
 if ( config["enable_Lmarquee"] != "Yes" )
 {
-    marquee_shadow = fe.add_image("marquee_shadow.png",0,0,pos.width(718),pos.height(188))
+    marquee_shadow = fe.add_image("marquee_shadow.png",0,0,scale.width(718),scale.height(188))
 }
    
 
@@ -334,23 +339,23 @@ local game_playcount = null
 
 if ( config["instruction_cards"] != "none" )
 {
-	instructions_bg = fe.add_text("",0,0,pos.width(instruction_card_width), pos.height(instruction_card_height) )
+	instructions_bg = fe.add_text("",0,0,scale.width(instruction_card_width), scale.height(instruction_card_height) )
     instructions_bg.set_bg_rgb(255,255,255)
     instructions_bg.bg_alpha=220
         
- 	instruction_card = fe.add_artwork(config["instruction_cards"], pos.x(863), pos.y(62), pos.width(instruction_card_width), pos.height(instruction_card_height));
+ 	instruction_card = fe.add_artwork(config["instruction_cards"], scale.x(863), scale.y(62), scale.width(instruction_card_width), scale.height(instruction_card_height));
     instruction_card.preserve_aspect_ratio = false;
 	instruction_card.trigger = Transition.EndNavigation;
 
-    instructions_bg.width = instruction_card.width + pos.x(20)
-    instructions_bg.height = instruction_card.height + pos.y(60)
+    instructions_bg.width = instruction_card.width + scale.x(20)
+    instructions_bg.height = instruction_card.height + scale.y(60)
         
-    game_title = fe.add_text("[!get_game_title]", 0,0, instruction_card.width, pos.height(20))
-    pos.set_font_height(18,game_title,"BottomLeft")
+    game_title = fe.add_text("[!get_game_title]", 0,0, instruction_card.width/2, scale.height(20))
+    scale.set_font_height(18,game_title,"BottomLeft")
     game_title.font = "Hanzel Extended Normal"
     
-    game_playcount = fe.add_text("[!get_game_playcount]", 0,0, instruction_card.width, pos.height(20))
-    pos.set_font_height(18,game_playcount,"BottomRight")
+    game_playcount = fe.add_text("[!get_game_playcount]", 0,0, instruction_card.width/2, scale.height(20))
+    scale.set_font_height(18,game_playcount,"BottomRight")
     game_playcount.font = "Hanzel Extended Normal"
 }
 
@@ -383,7 +388,7 @@ fe.add_transition_callback( "artwork_transition")
 // 					T-Molding
 ///////////////////////////////////////////////////////
 
-local tmolding = fe.add_image("tmolding.png" , pos.x(0),pos.y(0), pos.width(1031), pos.height(1080));
+local tmolding = fe.add_image("tmolding.png" , scale.x(0),scale.y(0), scale.width(1031), scale.height(1080));
     
 local color_array = [
 	[15,15,15,"black"],
@@ -421,7 +426,7 @@ else
 local wheel = null 
 if ( config["show_wheel"] == "Yes" )
 {
-	wheel = fe.add_artwork("wheel", 0, 0, pos.width(instruction_card_width), pos.height(229));
+	wheel = fe.add_artwork("wheel", 0, 0, scale.width(instruction_card_width), scale.height(229));
 	wheel.preserve_aspect_ratio = true;
 }
 
@@ -491,39 +496,39 @@ if (fe.layout.width < fe.layout.height)
 }
 else
 {
-    snap.x = pos.x(0,"center",snap,arcade_cabinet,"center")
-    snap.y = pos.y(482,"top",snap,arcade_cabinet,"top")
+    snap.x = scale.x(0,"center",snap,arcade_cabinet,"center")
+    snap.y = scale.y(482,"top",snap,arcade_cabinet,"top")
 
-    snap_underlay.width = pos.width(snap.width + 200) 
-    snap_underlay.height = pos.height(snap.height + 200 )
+    snap_underlay.width = scale.width(snap.width + 200) 
+    snap_underlay.height = scale.height(snap.height + 200 )
 
-    snap_underlay.x = pos.x(0, "center", snap_underlay, snap,"center")
-    snap_underlay.y = pos.y(0, "center", snap_underlay, snap,"center")
+    snap_underlay.x = scale.x(0, "center", snap_underlay, snap,"center")
+    snap_underlay.y = scale.y(0, "center", snap_underlay, snap,"center")
 
-    marquee.x=pos.x(0,"center",marquee,arcade_cabinet,"center")
-    marquee.y=pos.y(17,"top",marquee,arcade_cabinet,"top")
+    marquee.x=scale.x(0,"center",marquee,arcade_cabinet,"center")
+    marquee.y=scale.y(17,"top",marquee,arcade_cabinet,"top")
 
-    marquee_underlay.x = pos.x(0,"center" marquee_underlay, marquee, "center")
-    marquee_underlay.y = pos.y(0,"center" marquee_underlay, marquee, "center")
+    marquee_underlay.x = scale.x(0,"center" marquee_underlay, marquee, "center")
+    marquee_underlay.y = scale.y(0,"center" marquee_underlay, marquee, "center")
 
     if (marquee_shadow !=null)
     {
-        marquee_shadow.x=pos.x(0,"center",marquee_shadow,arcade_cabinet,"center")
-        marquee_shadow.y=pos.y(0,"top",marquee_shadow,arcade_cabinet,"top")    
+        marquee_shadow.x=scale.x(0,"center",marquee_shadow,arcade_cabinet,"center")
+        marquee_shadow.y=scale.y(0,"top",marquee_shadow,arcade_cabinet,"top")    
     }
 
     if (instructions_bg !=null)
     {
-        instruction_card.x = pos.x(60,"left",instruction_card,null,"center")
-        instruction_card.y = pos.y(32,"top",instruction_card,null,"top")
+        instruction_card.x = scale.x(60,"left",instruction_card,null,"center")
+        instruction_card.y = scale.y(32,"top",instruction_card,null,"top")
 
-        instructions_bg.x = pos.x(0,"center",instructions_bg,instruction_card,"center")
-        instructions_bg.y = pos.y(-15,"top",instructions_bg,instruction_card,"top")
+        instructions_bg.x = scale.x(0,"center",instructions_bg,instruction_card,"center")
+        instructions_bg.y = scale.y(-15,"top",instructions_bg,instruction_card,"top")
             
-        game_title.x = pos.x(15,"left", game_title, instructions_bg,"left")
-        game_title.y = pos.y(-15,"bottom", game_title, instructions_bg,"bottom")
-        game_playcount.x = pos.x(-15,"right", game_playcount, instructions_bg,"right")
-        game_playcount.y = pos.y(-15,"bottom", game_playcount, instructions_bg,"bottom")      
+        game_title.x = scale.x(15,"left", game_title, instructions_bg,"left")
+        game_title.y = scale.y(-15,"bottom", game_title, instructions_bg,"bottom")
+        game_playcount.x = scale.x(-15,"right", game_playcount, instructions_bg,"right")
+        game_playcount.y = scale.y(-15,"bottom", game_playcount, instructions_bg,"bottom")      
      }
 
     if (wheel !=null)
@@ -531,19 +536,19 @@ else
         local instructions_bottom_x = 0
         if (instructions_bg == null)
         {
-            wheel.x = pos.x(40,"center",wheel)
-            wheel.y = pos.y(0,"center",wheel)
+            wheel.x = scale.x(40,"center",wheel)
+            wheel.y = scale.y(0,"center",wheel)
         }
         else
         {
-            wheel.x = pos.x(0,"center",wheel,instructions_bg,"center")
-            wheel.y = pos.y(20,"top",wheel, instructions_bg,"bottom")  
-            wheel.height = pos.vertical_space_between(instructions_bg,null,10)
+            wheel.x = scale.x(0,"center",wheel,instructions_bg,"center")
+            wheel.y = scale.y(20,"top",wheel, instructions_bg,"bottom")  
+            wheel.height = scale.vertical_space_between(instructions_bg,null,10)
         }        
     }
 
-    tmolding.x = pos.x(0,"center",tmolding,arcade_cabinet,"center")
-    tmolding.y = pos.y(0,"top",tmolding, arcade_cabinet,"top") 
+    tmolding.x = scale.x(0,"center",tmolding,arcade_cabinet,"center")
+    tmolding.y = scale.y(0,"top",tmolding, arcade_cabinet,"top") 
 }
 
 
