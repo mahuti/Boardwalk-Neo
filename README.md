@@ -11,7 +11,7 @@ This is a basic layout styled after NeoGeo look and feel.
 
 ### Requires: 
 - File module
-- Preserve Art module 
+- Pos module https://github.com/mahuti/Pos-Module
 
 ### Uses: 
 - snap: video snaps ideally
@@ -23,7 +23,7 @@ This is a basic layout styled after NeoGeo look and feel.
 - Selectable or randomized T-Molding
 - 3 Selectable or randomized Bezels
 - Randomized backgrounds (add your own to the backgrounds folder and they'll show up as well)
-- Themes is scalable to any size 
+- Layout is scalable to any size 
 - Does not use a spinning wheel (but does use wheel logos)
 
 

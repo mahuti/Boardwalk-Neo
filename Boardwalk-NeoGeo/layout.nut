@@ -1,7 +1,7 @@
 //
 // Boardwalk-NeoGeo
 // Theme by Mahuti
-// vs. 2.0
+// vs. 2.1
 // 
 // thanks to Yaron for his shaders
 //
@@ -31,7 +31,7 @@ class UserConfig {
         options="No,CRT Bloom,CRT Lottes", 
         per_display="true",
         order=order++  /> 
-        enable_snap_shader="CRT Lottes";
+        enable_snap_shader="No";
 
     </ label="Show CRT scanlines", 
         help="Show CRT scanline effect", 
@@ -60,7 +60,6 @@ local config = fe.get_config();
 
 // modules
 fe.load_module("file"); 
-fe.load_module("preserve-art"); 
 fe.do_nut(fe.script_dir + "modules/pos.nut" );
 
 // stretched positioning
@@ -119,10 +118,10 @@ function random_file(path) {
 //					ARCADE BACKGROUNDS 
 ///////////////////////////////////////////////////////
 
-local bg = PreserveImage( random_file("backgrounds"), 0, 0, stretch.width(1440), stretch.height(1080) );
-bg.set_fit_or_fill( "fill" );
-bg.set_anchor( ::Anchor.Top );
- 
+local bg =  fe.add_image( random_file("backgrounds"), 0,0, stretch.width(1440), stretch.height(1080) )
+bg.preserve_aspect_ratio = false
+bg.mipmap = true
+    
 local black_overlay = fe.add_text("",0,0,stretch.width(1440),stretch.height(1080))
 black_overlay.set_bg_rgb(1,1,1)
 black_overlay.bg_alpha = 200
@@ -141,7 +140,7 @@ local snap = fe.add_surface(scale.width(459), scale.height(379));
 local snap_video = snap.add_artwork("snap", 0, 0, scale.width(459), scale.height(379)) 
 snap_video.trigger = Transition.EndNavigation;
 snap_video.preserve_aspect_ratio = false;
-
+snap_video.mipmap=true
 
     
 // scanlines and shaders
@@ -224,7 +223,8 @@ if (config["enable_crt_scanline"] != "No")
     }
     crt_scanlines = scanlines_srf.add_image( scan_art, snap.x, snap.y, snap.width, snap.height )
     crt_scanlines.preserve_aspect_ratio = false
-
+    crt_scanlines.mipmap = true
+        
     if( config["enable_crt_scanline"] == "Light" )
     {
         if( ScreenWidth < 1920 )
@@ -282,10 +282,11 @@ else
 local arcade_cabinet = fe.add_image( cabinet, scale.x(0),scale.y(0), scale.width(977), scale.height(1080));
 arcade_cabinet.x=scale.x(100,"right",arcade_cabinet,null,"center")
 arcade_cabinet.smooth = true
+arcade_cabinet.mipmap = true
   
 // marquee
 local marquee_underlay = fe.add_image("marquee.jpg",0,0,scale.width(714), scale.height(262))
-
+marquee_underlay.mipmap=true
 
 ///////////////////////////////////////////////////////
 //					MARQUEE
@@ -294,12 +295,14 @@ local marquee_underlay = fe.add_image("marquee.jpg",0,0,scale.width(714), scale.
 local marquee = fe.add_surface(scale.width(715),scale.height(262))
 local marquee_img = marquee.add_artwork("marquee", 0,0, scale.width(715), scale.height(262) )
 marquee_img.trigger = Transition.EndNavigation;
-
+marquee_img.mipmap = true
+    
 // light from the marquee
 local marquee_shadow = null
 if ( config["enable_Lmarquee"] != "Yes" )
 {
     marquee_shadow = fe.add_image("marquee_shadow.png",0,0,scale.width(718),scale.height(188))
+    marquee_shadow.mipmap = true 
 }
    
 
@@ -345,6 +348,7 @@ if ( config["instruction_cards"] != "none" )
         
  	instruction_card = fe.add_artwork(config["instruction_cards"], scale.x(863), scale.y(62), scale.width(instruction_card_width), scale.height(instruction_card_height));
     instruction_card.preserve_aspect_ratio = false;
+    instruction_card.mipmap=true
 	instruction_card.trigger = Transition.EndNavigation;
 
     instructions_bg.width = instruction_card.width + scale.x(20)
@@ -428,6 +432,7 @@ if ( config["show_wheel"] == "Yes" )
 {
 	wheel = fe.add_artwork("wheel", 0, 0, scale.width(instruction_card_width), scale.height(229));
 	wheel.preserve_aspect_ratio = true;
+    wheel.mipmap=true
 }
 
 ///////////////////////////////////////////////////////
@@ -466,8 +471,8 @@ if (fe.layout.width < fe.layout.height)
         wheel.visible = false
     }
     
-    snap_underlay.width = vert.width(snap.width + 300) 
-    snap_underlay.height = vert.height(snap.height + 300 )
+    snap_underlay.width =  snap.width + 20 
+    snap_underlay.height =  snap.height + 20 
     snap_underlay.x = vert.x(0, "center", snap_underlay, snap,"center")
     snap_underlay.y = vert.y(0, "center", snap_underlay, snap,"center")
 
@@ -499,8 +504,8 @@ else
     snap.x = scale.x(0,"center",snap,arcade_cabinet,"center")
     snap.y = scale.y(482,"top",snap,arcade_cabinet,"top")
 
-    snap_underlay.width = scale.width(snap.width + 200) 
-    snap_underlay.height = scale.height(snap.height + 200 )
+    snap_underlay.width = snap.width + 20 
+    snap_underlay.height =  snap.height + 20
 
     snap_underlay.x = scale.x(0, "center", snap_underlay, snap,"center")
     snap_underlay.y = scale.y(0, "center", snap_underlay, snap,"center")
